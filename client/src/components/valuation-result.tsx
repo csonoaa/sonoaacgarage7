@@ -3,12 +3,30 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { CarOffer } from "@/pages/home";
 import { formatCurrency } from "@/lib/utils";
+import { useLocation } from "wouter";
 
 interface ValuationResultProps {
   carOffer: CarOffer;
 }
 
 export default function ValuationResult({ carOffer }: ValuationResultProps) {
+  const [, navigate] = useLocation();
+  
+  const handleAcceptOffer = () => {
+    // Encode car offer data to pass in URL
+    const offerData = encodeURIComponent(JSON.stringify(carOffer));
+    navigate(`/sell-now?offer=${offerData}`);
+  };
+  
+  const handleRejectOffer = () => {
+    // Simply clear the form and reset
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      // Show a toast notification
+      window.location.reload();
+    }, 500);
+  };
+  
   return (
     <Card id="valuationResult" className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-xl font-bold text-center text-gray-800 mb-4">
@@ -60,6 +78,7 @@ export default function ValuationResult({ carOffer }: ValuationResultProps) {
           <Button 
             type="button" 
             className="px-6 py-2 bg-secondary hover:bg-green-600 text-white font-medium"
+            onClick={handleAcceptOffer}
           >
             Accept Offer
           </Button>
@@ -67,6 +86,7 @@ export default function ValuationResult({ carOffer }: ValuationResultProps) {
             type="button" 
             variant="outline"
             className="px-6 py-2 border border-gray-300 text-gray-700 font-medium"
+            onClick={handleRejectOffer}
           >
             Reject Offer
           </Button>
