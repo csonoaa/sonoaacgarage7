@@ -1,0 +1,167 @@
+I see! You want a step-by-step guide on how to **build** the website, **sonoaac garage**, based on all the features you mentioned. Here's a detailed instruction in 7 steps, outlining the specific tasks you need to complete:
+
+---
+
+### Step 1: **Setup Project Structure**
+
+1. **Create a new folder** for your project (e.g., `sonoaac-garage`).
+2. Inside this folder, create the following structure:
+
+   * `index.html`: The main HTML file.
+   * `styles.css`: The CSS file to style the site.
+   * `script.ts`: The TypeScript file for the frontend logic.
+   * `assets/`: Folder to store images and photos for the site.
+   * `data/`: Folder to store any data or JSON files you might need (e.g., car makes/models).
+
+### Step 2: **Design the Frontend (HTML and CSS)**
+
+1. **Create the homepage (`index.html`)**:
+
+   * Add a **header** section with the title **"sonoaac garage"**.
+   * Create a **form** to collect car details from the user.
+
+     * Form fields:
+
+       1. **Make**: Dropdown list populated with car brands (e.g., Toyota, Honda, Ford, etc.).
+       2. **Model**: Dropdown list that updates dynamically based on the selected make.
+       3. **Year**: Input field or dropdown with years (e.g., 2000–2025).
+       4. **Mileage**: Numeric input field for car mileage.
+       5. **Condition**: Dropdown with options like "Great", "Good", "Fair", "Bad", "Non-Drivable".
+       6. **Body Type**: Dropdown with options (e.g., Sedan, SUV, Truck).
+       7. **Color**: Dropdown for car colors.
+       8. **Transmission**: Checkbox to indicate if the car has a working transmission.
+       9. **Catalytic Converter**: Checkbox to specify if the car still has one.
+       10. **Photo Upload**: Option for users to upload photos of the car.
+
+2. **Design the layout using `styles.css`**:
+
+   * Make the form **responsive** to fit different screen sizes.
+   * Add styles for the dropdowns, buttons, and input fields.
+   * Ensure that the page has a **professional and clean** look, with a color scheme that reflects the branding of **sonoaac garage**.
+
+### Step 3: **Implement Dynamic Model Loading (JavaScript/TypeScript)**
+
+1. **Create a JavaScript function** that loads the correct **model options** based on the selected **make**:
+
+   * Use a **JSON file** or **JavaScript object** to store the available models for each make.
+   * Write a function that listens for changes in the **make** dropdown and updates the **model** dropdown accordingly.
+
+   Example:
+
+   ```typescript
+   const makesToModels = {
+     toyota: ['corolla', 'camry', 'rav4'],
+     ford: ['f-150', 'mustang', 'explorer'],
+     // Add more makes and models here
+   };
+
+   const makeSelect = document.getElementById('make') as HTMLSelectElement;
+   const modelSelect = document.getElementById('model') as HTMLSelectElement;
+
+   makeSelect.addEventListener('change', () => {
+     const selectedMake = makeSelect.value;
+     modelSelect.innerHTML = ''; // Clear existing options
+     makesToModels[selectedMake].forEach(model => {
+       const option = document.createElement('option');
+       option.value = model;
+       option.textContent = model;
+       modelSelect.appendChild(option);
+     });
+   });
+   ```
+
+2. **Link the script to `index.html`**:
+
+   * Add a `<script src="script.js"></script>` tag before the closing `</body>` tag.
+
+### Step 4: **Car Valuation Logic (TypeScript)**
+
+1. **Write the logic** to calculate the car’s value:
+
+   * Create a function that:
+
+     * Retrieves the **make**, **model**, **year**, **mileage**, **condition**, etc.
+     * Applies the **37% deduction** for the initial offer.
+     * Uses the **mileage** and **condition** to adjust the offer based on predefined rules.
+     * Displays the calculated offer on the webpage.
+
+   Example:
+
+   ```typescript
+   function calculateOffer() {
+     const make = document.getElementById('make').value;
+     const model = document.getElementById('model').value;
+     const year = parseInt((document.getElementById('year') as HTMLInputElement).value);
+     const mileage = parseInt((document.getElementById('mileage') as HTMLInputElement).value);
+     const condition = (document.getElementById('condition') as HTMLSelectElement).value;
+
+     // Example calculation logic
+     let offer = getMarketPrice(make, model, year); // Function to get market price
+     offer = offer * 0.63; // Subtract 37%
+
+     // Adjust offer based on mileage and condition
+     offer = adjustOfferBasedOnMileage(offer, mileage);
+     offer = adjustOfferBasedOnCondition(offer, condition);
+
+     document.getElementById('offer').textContent = `$${offer.toFixed(2)}`;
+   }
+   ```
+
+### Step 5: **Add Photo Upload Feature**
+
+1. **Implement a file upload input** in the form to allow users to upload photos of their car.
+
+   * Use an `<input type="file" accept="image/*" id="photo-upload" />` field in your HTML.
+2. **Handle the uploaded image** in TypeScript:
+
+   * Allow the image to be displayed on the page after upload.
+   * Optionally, allow users to upload multiple images.
+
+   Example:
+
+   ```typescript
+   const uploadInput = document.getElementById('photo-upload') as HTMLInputElement;
+   const preview = document.getElementById('photo-preview');
+
+   uploadInput.addEventListener('change', (event) => {
+     const file = uploadInput.files[0];
+     const reader = new FileReader();
+     
+     reader.onloadend = () => {
+       preview.src = reader.result as string;
+     };
+     if (file) {
+       reader.readAsDataURL(file);
+     }
+   });
+   ```
+
+### Step 6: **Create Data File for Makes and Models**
+
+1. **Create a `data/makes-and-models.json` file** that contains all possible car makes and their corresponding models:
+
+   ```json
+   {
+     "toyota": ["corolla", "camry", "rav4"],
+     "honda": ["accord", "civic", "cr-v"],
+     "ford": ["f-150", "mustang", "explorer"],
+     // Add more makes/models here
+   }
+   ```
+
+2. Use **AJAX** or **Fetch API** to load this data dynamically into the JavaScript function that populates the **model dropdown**.
+
+### Step 7: **Final Testing and Deployment**
+
+1. **Test the site thoroughly**:
+
+   * Test each form input for correct behavior (dropdowns, text fields, photo uploads).
+   * Ensure that the valuation logic works properly and the offer is calculated correctly.
+   * Check that the layout is responsive and looks good on various devices.
+2. **Deploy the website**:
+
+   * Once the site is tested and polished, deploy it using a service like **Netlify**, **Vercel**, or a web hosting provider.
+
+---
+
+This 7-step guide outlines the tasks you need to complete to build **sonoaac garage**, from setting up the project to deploying the final product.
