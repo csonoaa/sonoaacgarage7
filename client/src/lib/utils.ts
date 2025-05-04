@@ -38,8 +38,11 @@ export function calculateMileageAdjustment(mileage: number, year: number): numbe
   const age = currentYear - year;
   const expectedMileage = age * 15000;
   
+  // Cap excessive mileage at 150,000 for adjustment calculations
+  const cappedMileage = Math.min(mileage, 150000);
+  
   // Calculate mileage difference
-  const mileageDifference = mileage - expectedMileage;
+  const mileageDifference = cappedMileage - expectedMileage;
   
   // Adjust offer based on mileage (approximately -$0.10 per mile over expected)
   if (mileageDifference > 0) {
@@ -102,14 +105,19 @@ export function calculateOffer(
   // Calculate initial offer (37% off market value)
   const initialOffer = marketValue * 0.63;
   
-  // Adjust for mileage
-  const mileageAdjustment = calculateMileageAdjustment(mileage, year);
+  // Adjust for mileage (ensure it doesn't exceed half of initial offer)
+  let mileageAdjustment = calculateMileageAdjustment(mileage, year);
+  
+  // Ensure mileage adjustment is never more than 50% of the initial offer
+  // This prevents the final offer from going too low or negative
+  const maxMileageAdjustment = initialOffer * -0.5; // -50% of initial offer as maximum adjustment
+  mileageAdjustment = Math.max(mileageAdjustment, maxMileageAdjustment);
   
   // Adjust for condition
   const conditionAdjustment = calculateConditionAdjustment(condition, marketValue);
   
-  // Calculate final offer
-  const finalOffer = initialOffer + mileageAdjustment + conditionAdjustment;
+  // Calculate final offer (ensuring it's never negative)
+  const finalOffer = Math.max(0, initialOffer + mileageAdjustment + conditionAdjustment);
   
   return {
     marketValue,
