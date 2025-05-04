@@ -77,17 +77,18 @@ export function calculateOffer(
   model: string,
   year: number,
   mileage: number,
-  condition: string
+  condition: string,
+  hasCatalyticConverter: boolean = true
 ): CarOffer {
-  // For non-drivable cars, set a fixed offer of $900 maximum
-  if (condition === 'non-drivable') {
+  // For non-drivable cars or cars without catalytic converters, set a fixed offer of $900 maximum
+  if (condition === 'non-drivable' || !hasCatalyticConverter) {
     // Still calculate market value for reference
     const marketValue = getMarketValue(make, model, year);
     
     // Set initial offer as 0 since we're using fixed price logic
     const initialOffer = 0;
     
-    // No mileage adjustment for non-drivable
+    // No mileage adjustment for non-drivable or no catalytic converter
     const mileageAdjustment = 0;
     
     // The condition adjustment is the full $900 (or less if market value * 0.05 is less)

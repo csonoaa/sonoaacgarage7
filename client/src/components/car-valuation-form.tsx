@@ -55,11 +55,6 @@ export default function CarValuationForm({ setCarOffer }: CarValuationFormProps)
 
   // Handle form input changes
   const handleInputChange = (name: string, value: string | boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
     // If make changes, update model options
     if (name === 'make') {
       const selectedMake = value as string;
@@ -69,11 +64,21 @@ export default function CarValuationForm({ setCarOffer }: CarValuationFormProps)
         setFormData((prev) => ({
           ...prev,
           model: "",
-          [name]: value,
+          [name]: selectedMake,
         }));
       } else {
         setModelOptions([]);
+        setFormData((prev) => ({
+          ...prev,
+          model: "",
+          [name]: selectedMake,
+        }));
       }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
     }
   };
 
@@ -129,6 +134,9 @@ export default function CarValuationForm({ setCarOffer }: CarValuationFormProps)
       alert('Please fill in all required fields.');
       return;
     }
+    
+    // If catalytic converter is missing, treat as non-drivable
+    const condition = !formData.catalyticConverter ? 'non-drivable' : formData.condition;
 
     // Calculate offer
     const offer = calculateOffer(
@@ -136,7 +144,8 @@ export default function CarValuationForm({ setCarOffer }: CarValuationFormProps)
       formData.model,
       parseInt(formData.year),
       parseInt(formData.mileage),
-      formData.condition
+      condition,
+      formData.catalyticConverter
     );
 
     // Set car offer to display result
