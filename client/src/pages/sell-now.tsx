@@ -12,14 +12,14 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { CarOffer } from "./home";
 import { Separator } from "@/components/ui/separator";
-
+import { toast } from "@/hooks/use-toast";
 
 interface SellNowPageProps {
   carOffer?: CarOffer; 
 }
 
 export default function SellNow() {
-  const [location, navigate] = useLocation();
+  const [, navigate] = useLocation();
   
   // Try to parse car offer from URL state
   const searchParams = new URLSearchParams(window.location.search);
