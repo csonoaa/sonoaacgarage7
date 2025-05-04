@@ -33,6 +33,11 @@ export function getMarketValue(make: string, model: string, year: number): numbe
  * Calculate mileage adjustment based on mileage and year
  */
 export function calculateMileageAdjustment(mileage: number, year: number): number {
+  // No mileage adjustment for cars with less than 50,000 miles
+  if (mileage < 50000) {
+    return 0;
+  }
+  
   // Calculate expected mileage based on year (15,000 miles per year)
   const currentYear = new Date().getFullYear();
   const age = currentYear - year;
@@ -48,6 +53,8 @@ export function calculateMileageAdjustment(mileage: number, year: number): numbe
   if (mileageDifference > 0) {
     return Math.max(-5000, mileageDifference * -0.1); // Cap at -$5000
   } else if (mileageDifference < 0) {
+    // For low mileage cars that are still above 50k miles
+    // But below expected mileage, provide a slight positive adjustment
     return Math.min(2000, Math.abs(mileageDifference) * -0.05); // Cap at -$2000 (negative adjustment for lower mileage too)
   }
   
