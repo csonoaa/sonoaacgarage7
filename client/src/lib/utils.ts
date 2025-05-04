@@ -45,7 +45,7 @@ export function calculateMileageAdjustment(mileage: number, year: number): numbe
   if (mileageDifference > 0) {
     return Math.max(-5000, mileageDifference * -0.1); // Cap at -$5000
   } else if (mileageDifference < 0) {
-    return Math.min(2000, Math.abs(mileageDifference) * 0.05); // Cap at +$2000
+    return Math.min(2000, Math.abs(mileageDifference) * -0.05); // Cap at -$2000 (negative adjustment for lower mileage too)
   }
   
   return 0;
