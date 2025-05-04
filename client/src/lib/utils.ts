@@ -69,6 +69,33 @@ export function calculateOffer(
   mileage: number,
   condition: string
 ): CarOffer {
+  // For non-drivable cars, set a fixed offer of $900 maximum
+  if (condition === 'non-drivable') {
+    // Still calculate market value for reference
+    const marketValue = getMarketValue(make, model, year);
+    
+    // Set initial offer as 0 since we're using fixed price logic
+    const initialOffer = 0;
+    
+    // No mileage adjustment for non-drivable
+    const mileageAdjustment = 0;
+    
+    // The condition adjustment is the full $900 (or less if market value * 0.05 is less)
+    const conditionAdjustment = Math.min(900, marketValue * 0.05);
+    
+    // Final offer is capped at $900
+    const finalOffer = Math.min(900, conditionAdjustment);
+    
+    return {
+      marketValue,
+      initialOffer,
+      mileageAdjustment,
+      conditionAdjustment,
+      finalOffer
+    };
+  }
+  
+  // For drivable cars, proceed with normal calculation
   // Calculate market value
   const marketValue = getMarketValue(make, model, year);
   
